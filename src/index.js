@@ -13,7 +13,7 @@ pool.connect((err, client, release) => {
     }
     console.log("Connected to Postgres ", result.rows);
   });
-});
+}); 
 
 const app = express();
 const port = process.env.port || 4000;

@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const pool = require("../db/db");
-const queries = require("../db/queries")
+const queries = require("../db/queries");
+const validator = require('validaotr');
+const passwordValidator = require('password-validator');
+
 
 // Function to register a new user with role assignment
 const registerUser = async (
@@ -25,7 +28,7 @@ const registerUser = async (
         }
 
         // Hash the user's password
-        const saltRounds = 10;
+        const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10; 
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         // Insert the new user into the Users table
