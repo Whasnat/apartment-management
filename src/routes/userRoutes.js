@@ -18,18 +18,19 @@ router.get("/users", authenticateToken(["Admin"]), async (req, res) => {
 });
 
 // Protected route: Get user profile
-router.get('/profile', authenticateToken, (req, res) => {
+router.get('/profile', authenticateToken(), (req, res) => {
   console.log('Inside /profile route');  // Debug log
-  res.json({ message: 'Profile route is working' });
-  // const user = req.user;  // Access the decoded user data from the token
-    // res.json({
-    //     message: `Hello, ${user.username}! Welcome to your profile.`,
-    //     user: {
-    //         userId: user.userId,
-    //         username: user.username,
-    //         role: user.role
-    //     }
-    // });
+  const user = req.user;
+
+  // Ensure a response is sent back
+  res.json({
+      message: `Hello, ${user.username}! Welcome to your profile.`,
+      user: {
+          userId: user.userId,
+          username: user.username,
+          role: user.role
+      }
+  });
 });
 
 module.exports = router;
