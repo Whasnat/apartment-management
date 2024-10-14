@@ -1,27 +1,17 @@
-const express = require("express");
-const pool = require("./config/db");
-
-
-pool.connect((err, client, release) => {
-  if (err) {
-    console.log("Error Occured ", err.stack);
-  }
-  client.query("SELECT NOW()", (err, result) => {
-    release();
-    if (err) {
-      console.log("Error Executing query ", err.stack);
-    }
-    console.log("Connected to Postgres ", result.rows);
-  });
-}); 
+require('dotenv').config();
+const express = require('express');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
-const port = process.env.port || 4000;
+const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  res.send("Apartment Management in running on Express Server");
-});
+// Middleware to parse JSON bodies
+app.use(express.json());
 
+// Routes
+app.use('/auth', authRoutes);
+
+// Start the server
 app.listen(port, () => {
-  console.log(`Server is Running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });

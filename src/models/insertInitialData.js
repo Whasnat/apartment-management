@@ -16,9 +16,9 @@ const hashPassword = async (password) => {
 // Function to insert roles
 const insertRoles = async () => {
     const roles = [
-        { name: 'Admin', description: 'System Administrator' },
-        { name: 'Owner', description: 'Building Owner' },
-        { name: 'Tenant', description: 'Apartment Tenant' }
+        { name: "Admin", description: "System Administrator" },
+        { name: "Owner", description: "Building Owner" },
+        { name: "Tenant", description: "Apartment Tenant" }
     ];
 
     try {

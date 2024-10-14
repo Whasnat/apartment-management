@@ -1,9 +1,11 @@
 // Insert data into Roles, Users & User_Role tables
 
 
-// INSERT ROLES
+// Corrected Insert Role Query
 const insertRole = `
-    INSERT INTO roles (name, description), values ($1, $2) ON CONFLICT (name) DO NOTHING;
+    INSERT INTO roles (name, description) 
+    VALUES ($1, $2) 
+    ON CONFLICT (name) DO NOTHING;
 `;
 
 
@@ -27,9 +29,18 @@ const getRoleByName = `
     SELECT id FROM roles WHERE name = $1;
 `;
 
+
+// Get user by username
+const getUserByUsername = `
+    SELECT * FROM users WHERE username = $1;
+`;
+
+
+
 module.exports = {
     insertRole,
     insertUser,
     insertUserRole,
-    getRoleByName
+    getRoleByName,
+    getUserByUsername,
 };
