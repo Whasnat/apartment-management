@@ -30,9 +30,13 @@ const getRoleByName = `
 `;
 
 
-// Get user by username
+// Get user by username and join with the roles table
 const getUserByUsername = `
-    SELECT * FROM users WHERE username = $1;
+    SELECT users.id, users.username, users.email, users.password_hash, roles.name AS role
+    FROM users
+    JOIN user_roles ON users.id = user_roles.user_id
+    JOIN roles ON user_roles.role_id = roles.id
+    WHERE users.username = $1;
 `;
 
 

@@ -23,9 +23,9 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Generate a JWT token
+        // Generate a JWT token, including the role
         const token = jwt.sign(
-            { userId: user.id, username: user.username, role: user.role },
+            { userId: user.id, username: user.username, role: user.role },  // Include role
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
