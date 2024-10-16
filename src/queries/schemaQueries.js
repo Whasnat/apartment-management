@@ -29,8 +29,37 @@ const createUserRolesTable = `
     );
 `;
 
+
+// Create Buildings Table
+const createBuildingsTable = `
+    CREATE TABLE IF NOT EXISTS buildings (
+        id SERIAL PRIMARY KEY,
+        owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        name VARCHAR(100) NOT NULL,
+        address TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
+// Create Apartments Table
+const createApartmentsTable = `
+    CREATE TABLE IF NOT EXISTS apartments (
+        id SERIAL PRIMARY KEY,
+        building_id INTEGER REFERENCES buildings(id) ON DELETE CASCADE,
+        unit_number VARCHAR(10) NOT NULL,
+        status VARCHAR(20) NOT NULL CHECK (status IN ('vacant', 'occupied')),
+        rent_amount DECIMAL(10, 2) NOT NULL,
+        utility_breakdown JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 module.exports = {
     createUsersTable,
     createRolesTable,
     createUserRolesTable,
+    createBuildingsTable, 
+    createApartmentsTable,
 };
