@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const apartmentRoutes = require('./routes/apartmentRoutes');  // Import apartment routes
+const apartmentRoutes = require('./routes/apartmentRoutes');
+const buildingRoutes = require('./routes/buildingRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,7 +14,8 @@ app.use(express.json());
 // Routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
-app.use('/owner', apartmentRoutes);  // Add apartment routes
+app.use('/owner', buildingRoutes);
+app.use('/owner', apartmentRoutes);
 
 // Start the server
 app.listen(port, () => {

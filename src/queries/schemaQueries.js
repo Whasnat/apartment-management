@@ -56,6 +56,19 @@ const createApartmentsTable = `
     );
 `;
 
+// Create Tenants Table
+const createTenantsTable = `
+    CREATE TABLE IF NOT EXISTS tenants (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        apartment_id INTEGER REFERENCES apartments(id) ON DELETE SET NULL,
+        move_in_date DATE NOT NULL,
+        move_out_date DATE DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 module.exports = {
     createUsersTable,
     createRolesTable,
