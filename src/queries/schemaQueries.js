@@ -75,4 +75,5 @@ module.exports = {
     createUserRolesTable,
     createBuildingsTable, 
     createApartmentsTable,
+    createTenantsTable,
 };

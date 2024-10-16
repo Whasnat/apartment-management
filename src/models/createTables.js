@@ -1,5 +1,5 @@
 const pool = require('../config/db');
-const { createUsersTable, createRolesTable, createUserRolesTable, createBuildingsTable, createApartmentsTable } = require('../queries/schemaQueries');
+const { createUsersTable, createRolesTable, createUserRolesTable, createBuildingsTable, createApartmentsTable, createTenantsTable } = require('../queries/schemaQueries');
 
 const createTables = async () => {
     try {
@@ -8,6 +8,7 @@ const createTables = async () => {
         await pool.query(createUserRolesTable);
         await pool.query(createBuildingsTable);
         await pool.query(createApartmentsTable);
+        await pool.query(createTenantsTable);
         console.log('Tables created successfully.');
     } catch (err) {
         console.error('Error creating tables', err);
