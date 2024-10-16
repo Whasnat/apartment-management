@@ -29,7 +29,6 @@ const createUserRolesTable = `
     );
 `;
 
-
 // Create Buildings Table
 const createBuildingsTable = `
     CREATE TABLE IF NOT EXISTS buildings (
@@ -69,11 +68,46 @@ const createTenantsTable = `
     );
 `;
 
+// Create Payments Table
+const createPaymentsTable = `
+    CREATE TABLE IF NOT EXISTS payments (
+        id SERIAL PRIMARY KEY,
+        tenant_id INTEGER REFERENCES tenants(id) ON DELETE CASCADE,
+        invoice_id INTEGER REFERENCES invoices(id) ON DELETE SET NULL,
+        amount DECIMAL(10, 2) NOT NULL,
+        payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('bank_transfer', 'Bkash', 'Nagad', 'Rocket')),
+        status VARCHAR(20) NOT NULL CHECK (status IN ('paid', 'pending', 'overdue')),
+        transaction_id VARCHAR(100) UNIQUE,
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
+// Create Invoices Table
+const createInvoicesTable = `
+    CREATE TABLE IF NOT EXISTS invoices (
+        id SERIAL PRIMARY KEY,
+        tenant_id INTEGER REFERENCES tenants(id) ON DELETE CASCADE,
+        amount DECIMAL(10, 2) NOT NULL,
+        due_date DATE NOT NULL,
+        status VARCHAR(20) NOT NULL CHECK (status IN ('generated', 'sent', 'paid', 'overdue')),
+        delivery_method VARCHAR(50) NOT NULL CHECK (delivery_method IN ('WhatsApp', 'Messenger', 'Email')),
+        generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        sent_at TIMESTAMP,
+        paid_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
 module.exports = {
-    createUsersTable,
-    createRolesTable,
-    createUserRolesTable,
-    createBuildingsTable, 
-    createApartmentsTable,
-    createTenantsTable,
+  createUsersTable,
+  createRolesTable,
+  createUserRolesTable,
+  createBuildingsTable,
+  createApartmentsTable,
+  createTenantsTable,
+  createPaymentsTable,
+  createInvoicesTable,
 };
