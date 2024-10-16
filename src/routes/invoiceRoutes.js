@@ -2,6 +2,7 @@ const express = require('express');
 const authenticateToken = require('../middleware/authMiddleware');
 const pool = require('../config/db');
 const invoiceQueries = require('../queries/invoiceQueries');
+const notificationQueries = require('../queries/notificationQueries');
 
 const router = express.Router();
 
@@ -34,16 +35,34 @@ router.get('/invoices/:tenantId', authenticateToken(['Tenant']), async (req, res
 });
 
 
-// Mark overdue invoices
+
+
+// Mark overdue invoices and send notifications
 router.put('/invoices/mark-overdue', authenticateToken(['Owner', 'Admin']), async (req, res) => {
     try {
-        const result = await pool.query(invoiceQueries.markInvoicesAsOverdue);
-        return res.json({ message: 'Overdue invoices updated', overdueInvoices: result.rows });
+        const overdueInvoices = await pool.query(invoiceQueries.markInvoicesAsOverdue);
+        const notifications = [];
+
+        for (const invoice of overdueInvoices.rows) {
+            // Create a message for the tenant
+            const message = `Your invoice with ID ${invoice.id} is overdue. Please pay ${invoice.amount} as soon as possible.`;
+            
+            // Insert notification for the tenant
+            const notificationResult = await pool.query(notificationQueries.insertNotification, [
+                invoice.tenant_id,
+                message
+            ]);
+
+            notifications.push(notificationResult.rows[0]);
+        }
+
+        return res.json({ message: 'Overdue invoices updated and notifications sent', overdueInvoices: overdueInvoices.rows, notifications });
     } catch (err) {
         console.error('Error marking invoices as overdue:', err);
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 
 module.exports = router;

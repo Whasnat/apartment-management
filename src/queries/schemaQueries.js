@@ -101,6 +101,19 @@ const createInvoicesTable = `
     );
 `;
 
+
+// Create Notifications Table
+const createNotificationsTable = `
+    CREATE TABLE IF NOT EXISTS notifications (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        message TEXT NOT NULL,
+        read_status BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;  
+
+
 module.exports = {
   createUsersTable,
   createRolesTable,
@@ -110,4 +123,5 @@ module.exports = {
   createTenantsTable,
   createPaymentsTable,
   createInvoicesTable,
+  createNotificationsTable,
 };

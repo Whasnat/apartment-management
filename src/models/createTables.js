@@ -8,6 +8,7 @@ const {
   createTenantsTable,
   createPaymentsTable,
   createInvoicesTable,
+  createNotificationsTable,
 } = require("../queries/schemaQueries");
 
 const createTables = async () => {
@@ -20,6 +21,7 @@ const createTables = async () => {
     await pool.query(createTenantsTable);
     await pool.query(createInvoicesTable);
     await pool.query(createPaymentsTable);
+    await pool.query(createNotificationsTable);
     console.log("Tables created successfully.");
   } catch (err) {
     console.error("Error creating tables", err);
