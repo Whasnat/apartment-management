@@ -22,7 +22,7 @@ router.post('/invoices', authenticateToken(['Owner']), async (req, res) => {
 });
 
 // Tenant-only route: Get invoices by tenant
-router.get('/invoices/:tenantId', authenticateToken(['Tenant']), async (req, res) => {
+router.get('/invoices/:tenantId', authenticateToken(['Tenant','Owner']), async (req, res) => {
     const tenantId = req.params.tenantId;
 
     try {
@@ -44,9 +44,16 @@ router.put('/invoices/mark-overdue', authenticateToken(['Owner', 'Admin']), asyn
         const notifications = [];
 
         for (const invoice of overdueInvoices.rows) {
-            // Create a message for the tenant
+            // Check if tenant_id is valid before creating notification
+            const tenant = await pool.query('SELECT * FROM tenants WHERE id = $1', [invoice.tenant_id]);
+
+            if (tenant.rows.length === 0) {
+                console.log(`Invalid tenant_id: ${invoice.tenant_id}, skipping notification.`);
+                continue;  // Skip creating notification if tenant is invalid
+            }
+
             const message = `Your invoice with ID ${invoice.id} is overdue. Please pay ${invoice.amount} as soon as possible.`;
-            
+
             // Insert notification for the tenant
             const notificationResult = await pool.query(notificationQueries.insertNotification, [
                 invoice.tenant_id,
@@ -62,6 +69,7 @@ router.put('/invoices/mark-overdue', authenticateToken(['Owner', 'Admin']), asyn
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 
 
